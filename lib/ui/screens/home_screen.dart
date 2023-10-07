@@ -1,5 +1,5 @@
 import 'package:blog_rest_api_provider/data/model/get_all_post_response.dart';
-import 'package:blog_rest_api_provider/provider/get_all_post_state.dart';
+import 'package:blog_rest_api_provider/provider/get_all_post/get_all_post_state.dart';
 import 'package:blog_rest_api_provider/provider/get_all_post/get_all_post_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

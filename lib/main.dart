@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
       create: (_)=>GetAllPostNotifier(),
       child: MaterialApp(
         debugShowCheckedModeBanner:false,
-        theme: ThemeData(useMaterial3: true),
+        theme: ThemeData(useMaterial3: true,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.lightBlue)
+        ),
         home: const HomeScreen(),
       ),
     );
