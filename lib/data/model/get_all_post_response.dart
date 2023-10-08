@@ -7,7 +7,7 @@ class GetAllPostResponse {
     id = json['id'];
     title = json['title'];
   }
-  num? id;
+  int? id;
   String? title;
 
   Map<String, dynamic> toJson() {

@@ -11,10 +11,11 @@ class GetCompletePostNotifier extends ChangeNotifier{
     getCompletePostState=GetCompletePostLoading();
     try{
       GetOnePostResponse getOnePostResponse=await _apiService.getOnePost(id);
-      GetCompletePostState getCompletePostState=GetCompletePostSuccess(getOnePostResponse);
+       getCompletePostState=GetCompletePostSuccess(getOnePostResponse);
       notifyListeners();
     }catch(e){
        getCompletePostState=GetCompletePostFailed('Ops!! Something went Wrong!');
+       notifyListeners();
     }
   }
 }
