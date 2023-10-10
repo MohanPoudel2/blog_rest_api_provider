@@ -33,32 +33,38 @@ class _HomeScreenState extends State<HomeScreen> {
           if (getAllPostState is GetAllPostSuccessful) {
             List<GetAllPostResponse> getAllPostResponseList =
                 getAllPostState.getAllPostList;
-            return ListView.builder(
-              itemCount: getAllPostResponseList.length,
-              itemBuilder: (context, position) {
-                GetAllPostResponse getAllPostResponse =
-                    getAllPostResponseList[position];
-                return InkWell(
-                  onTap: () {
-                    if (getAllPostResponse != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BlogPostDetailScreen(
-                              id: getAllPostResponse.id!,
-                            ),
-                          ));
-                    }
-                  },
-                  child: Card(
-                    child: Center(
-                      child: ListTile(
-                        title: Text('${getAllPostResponse.title}'),
+            return RefreshIndicator(
+              onRefresh: () {
+                _getAllPost(context);
+                return Future.delayed(const Duration(seconds: 1));
+              },
+              child: ListView.builder(
+                itemCount: getAllPostResponseList.length,
+                itemBuilder: (context, position) {
+                  GetAllPostResponse getAllPostResponse =
+                      getAllPostResponseList[position];
+                  return InkWell(
+                    onTap: () {
+                      if (getAllPostResponse != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BlogPostDetailScreen(
+                                id: getAllPostResponse.id!,
+                              ),
+                            ));
+                      }
+                    },
+                    child: Card(
+                      child: Center(
+                        child: ListTile(
+                          title: Text('${getAllPostResponse.title}'),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           } else if (getAllPostState is GetAllPostFail) {
             return Column(

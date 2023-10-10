@@ -8,21 +8,15 @@ import '../model/get_one_post_response.dart';
 
 class BlogApiService {
   static const String baseUrl = "http://rubylearner.com:5000/";
-  late Dio dio;
 
   BlogApiService() {
-    dio = Dio();
-    getTemporaryDirectory().then((dir){
- final fileStore=FileCacheStore(dir.path);
- CacheOptions cacheOptions=CacheOptions(store: fileStore);
- dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
-    });
+    getTemporaryDirectory().then((dir) {});
   }
 
   Future<List<GetAllPostResponse>> getAllPost() async {
+    Dio dio = await _getDio();
     final postListResponse = await dio.get(
       '${baseUrl}posts',
-
     );
     final postList = (postListResponse.data as List).map((e) {
       return GetAllPostResponse.fromJson(e);
@@ -31,6 +25,8 @@ class BlogApiService {
   }
 
   Future<GetOnePostResponse> getOnePost(int id) async {
+    Dio dio = await _getDio();
+
     final postResponse = await dio.get(
       '${baseUrl}post?id=$id',
     );
@@ -44,10 +40,21 @@ class BlogApiService {
       required String body,
       required FormData? data,
       required Function(int, int) sendProgress}) async {
+    Dio dio = await _getDio();
+
     final uploadPostResponse = await dio.post(
         '${baseUrl}post?title=$title&body=$body',
         data: data,
         onSendProgress: sendProgress);
     return BlogUploadResponse.fromJson(uploadPostResponse.data);
+  }
+
+  Future<Dio> _getDio() async {
+    Dio dio = Dio();
+    final dir = await getTemporaryDirectory();
+    final fileStore = FileCacheStore(dir.path);
+    CacheOptions cacheOptions = CacheOptions(store: fileStore,hitCacheOnErrorExcept: []);
+    dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
+    return dio;
   }
 }
