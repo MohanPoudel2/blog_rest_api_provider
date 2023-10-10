@@ -4,14 +4,14 @@ import 'package:blog_rest_api_provider/provider/upload_post/blog_upload_ui_state
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-class BlogUploadProvider extends ChangeNotifier {
-  BlogUploadUiState blogUploadUiState = BlogUploadLoading(0);
+class BlogUploadNotifier extends ChangeNotifier {
+  BlogUploadUiState blogUploadUiState = BlogUploadFormState();
   final BlogApiService _apiService = BlogApiService();
 
   void upload(
       {required String title,
       required String body,
-      required FormData data}) async {
+      required FormData? data}) async {
     blogUploadUiState = BlogUploadLoading(0);
     notifyListeners();
     try {
@@ -20,8 +20,9 @@ class BlogUploadProvider extends ChangeNotifier {
         body: body,
         data: data,
         sendProgress: (int send,int size) {
-          int progress=((send/size)*100).toInt();
+          double progress=((send/size)*100);
           blogUploadUiState=BlogUploadLoading(progress);
+          notifyListeners();
       }
       );
       blogUploadUiState = BlogUploadSuccess(blogUploadResponse);
@@ -30,5 +31,10 @@ class BlogUploadProvider extends ChangeNotifier {
       blogUploadUiState = BlogUploadFailed('Something Wrong!');
       notifyListeners();
     }
+
+  }
+  void tryAgain(){
+    blogUploadUiState=BlogUploadFormState();
+    notifyListeners();
   }
 }

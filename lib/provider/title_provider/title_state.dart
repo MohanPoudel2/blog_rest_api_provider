@@ -1,5 +1,5 @@
 import 'package:blog_rest_api_provider/data/model/get_one_post_response.dart';
-import 'package:flutter/widgets.dart';
+
 
 abstract class GetTitleState {}
 

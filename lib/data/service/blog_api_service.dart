@@ -1,6 +1,7 @@
 import 'package:blog_rest_api_provider/data/model/blog_upload_response.dart';
 import 'package:blog_rest_api_provider/data/model/get_all_post_response.dart';
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../model/get_one_post_response.dart';
 
@@ -10,6 +11,11 @@ class BlogApiService {
 
   BlogApiService() {
     dio = Dio();
+    dio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+    ));
   }
 
   Future<List<GetAllPostResponse>> getAllPost() async {
@@ -30,7 +36,7 @@ class BlogApiService {
   Future<BlogUploadResponse> uploadPost(
       {required String title,
       required String body,
-      required FormData data,
+      required FormData? data,
       required Function(int,int) sendProgress}) async {
     final uploadPostResponse =
         await dio.post('${baseUrl}post?title=$title&body=$body', data: data,onSendProgress:sendProgress );
