@@ -1,7 +1,9 @@
 import 'package:blog_rest_api_provider/data/model/get_one_post_response.dart';
 import 'package:blog_rest_api_provider/data/service/blog_api_service.dart';
+import 'package:blog_rest_api_provider/provider/blog_post_delete/delete_post_provider.dart';
 import 'package:blog_rest_api_provider/provider/get_complete_post/get_complete_post_state.dart';
 import 'package:blog_rest_api_provider/provider/title_provider/title_state.dart';
+import 'package:blog_rest_api_provider/ui/screens/home_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,7 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
     super.didChangeDependencies();
     _getBlogDetail(widget.id);
     _getBlogTitle(widget.id);
+
   }
 
   @override
@@ -48,6 +51,43 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
             );
           },
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Icon(
+                            Icons.warning_amber,
+                            size: 50,
+                          ),
+                          content: const Text(
+                              'Are you sure you wanna delete this Post?'),
+                          actions: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('cancel')),
+                               Consumer<DeletePostNotifier>(builder: (_, deletePostNotifier, __){
+
+                                  return ElevatedButton(onPressed: (){
+                                    _deleteBlogPost(widget.id);
+                                    _getBlogDetail(widget.id);
+
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>const  HomeScreen(),));
+                                  }, child: const Text('Ok'));
+                                 },)
+                              ],
+                            )
+                          ],
+                        ));
+              },
+              icon: const Icon(Icons.delete_outline))
+        ],
         centerTitle: true,
       ),
       body: Consumer<GetCompletePostNotifier>(
@@ -69,7 +109,12 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
                         imageUrl:
                             '${BlogApiService.baseUrl}${getOnePostResponse.photo}',
                         errorWidget: (_, __, e) {
-                          return const Center(child: Icon(Icons.error_outline_outlined,size: 60,),);
+                          return const Center(
+                            child: Icon(
+                              Icons.error_outline_outlined,
+                              size: 60,
+                            ),
+                          );
                         },
                       )
                   ],
@@ -105,5 +150,9 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
 
   void _getBlogTitle(int id) {
     Provider.of<GetTitleNotifier>(context, listen: false).getTitle(id: id);
+  }
+
+  void _deleteBlogPost(int id) {
+    Provider.of<DeletePostNotifier>(context,listen: false).deleteOnePost(id: widget.id);
   }
 }

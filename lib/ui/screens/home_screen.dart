@@ -86,17 +86,17 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async{
-         final result=await Navigator.push(
+        onPressed: () async {
+          final result = await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const BlogUploadScreen(),
               ));
-         if(result!=null && result =='success') {
-           if (mounted) {
-             _getAllPost(context);
-           }
-         }
+          if (result != null && result == 'success') {
+            if (mounted) {
+              _getAllPost(context);
+            }
+          }
         },
         child: const Icon(Icons.add),
       ),

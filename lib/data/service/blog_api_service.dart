@@ -48,6 +48,11 @@ class BlogApiService {
         onSendProgress: sendProgress);
     return BlogUploadResponse.fromJson(uploadPostResponse.data);
   }
+  Future deletePost({required int id}) async{
+    Dio dio=await _getDio();
+    final deleteOnePost=await dio.delete('${baseUrl}post?id=$id');
+    return deleteOnePost;
+  }
 
   Future<Dio> _getDio() async {
     Dio dio = Dio();

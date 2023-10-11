@@ -1,6 +1,7 @@
 
 
 
+import 'package:blog_rest_api_provider/provider/blog_post_delete/delete_post_provider.dart';
 import 'package:blog_rest_api_provider/provider/get_all_post/get_all_post_notifier.dart';
 import 'package:blog_rest_api_provider/provider/get_complete_post/get_complete_post_notifier.dart';
 import 'package:blog_rest_api_provider/provider/title_provider/get_title_notifier.dart';
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_)=>GetAllPostNotifier()),
         ChangeNotifierProvider(create: (_)=>GetCompletePostNotifier()),
         ChangeNotifierProvider(create: (_)=>GetTitleNotifier()),
-        ChangeNotifierProvider(create: (_)=>BlogUploadNotifier()),
+        ChangeNotifierProvider(create: (_)=>BlogUploadNotifier(),),
+        ChangeNotifierProvider(create: (_)=>DeletePostNotifier(),),
 
       ],
       child: MaterialApp(

@@ -26,6 +26,7 @@ class _BlogUploadScreenState extends State<BlogUploadScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Blog Upload'),
+
       ),
       body: Consumer<BlogUploadNotifier>(
         builder: (_, blogUploadNotifier, __) {
