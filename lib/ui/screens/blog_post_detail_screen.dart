@@ -161,6 +161,8 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
           if(result !=null && result =="success"){
             _getBlogDetail(widget.id);
             _getBlogTitle(widget.id);
+            if(mounted){
+            _getAllPost(context);}
           }
         },
         child: const Icon(Icons.edit),
