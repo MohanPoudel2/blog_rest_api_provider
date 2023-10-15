@@ -1,6 +1,8 @@
 abstract class DeletePostState {}
 
-class DeletePostLoading extends DeletePostState {}
+class DeletePostLoading extends DeletePostState {
+
+}
 
 class DeletePostSuccess extends DeletePostState {
   final String deleted;

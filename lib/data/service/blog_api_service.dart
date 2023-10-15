@@ -1,3 +1,4 @@
+import 'package:blog_rest_api_provider/data/model/blog_put_response.dart';
 import 'package:blog_rest_api_provider/data/model/blog_upload_response.dart';
 import 'package:blog_rest_api_provider/data/model/get_all_post_response.dart';
 import 'package:dio/dio.dart';
@@ -48,9 +49,24 @@ class BlogApiService {
         onSendProgress: sendProgress);
     return BlogUploadResponse.fromJson(uploadPostResponse.data);
   }
-  Future deletePost({required int id}) async{
-    Dio dio=await _getDio();
-    final deleteOnePost=await dio.delete('${baseUrl}post?id=$id');
+  Future<BlogPutResponse> putPost(
+      {required int id, required String title, required String body}) async {
+    Dio dio = await _getDio();
+    final response = await dio.put('${baseUrl}post?id=$id&title=$title&body=$body');
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = response.data;
+      String message = data['result'] ?? 'Successfully updated';
+      return BlogPutResponse(id: id, title: title, body: body, result: message);
+    } else {
+      throw Exception('Failed to update post');
+    }
+  }
+
+
+  Future deletePost({required int id}) async {
+    Dio dio = await _getDio();
+    final deleteOnePost = await dio.delete('${baseUrl}post?id=$id');
     return deleteOnePost;
   }
 
@@ -58,7 +74,8 @@ class BlogApiService {
     Dio dio = Dio();
     final dir = await getTemporaryDirectory();
     final fileStore = FileCacheStore(dir.path);
-    CacheOptions cacheOptions = CacheOptions(store: fileStore,hitCacheOnErrorExcept: []);
+    CacheOptions cacheOptions =
+        CacheOptions(store: fileStore, hitCacheOnErrorExcept: []);
     dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
     return dio;
   }

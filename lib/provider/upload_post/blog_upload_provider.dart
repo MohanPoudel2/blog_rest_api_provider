@@ -5,7 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 class BlogUploadNotifier extends ChangeNotifier {
-  BlogUploadUiState blogUploadUiState = BlogUploadFormState();
+  BlogUploadUiState blogUploadUiState = BlogUploadFormState(
+
+  );
   final BlogApiService _apiService = BlogApiService();
 
   void upload(

@@ -26,7 +26,6 @@ class _BlogUploadScreenState extends State<BlogUploadScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Blog Upload'),
-
       ),
       body: Consumer<BlogUploadNotifier>(
         builder: (_, blogUploadNotifier, __) {
@@ -35,9 +34,8 @@ class _BlogUploadScreenState extends State<BlogUploadScreen> {
           if (blogUploadUiState is BlogUploadLoading) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: [
-                 Text('Loading......${blogUploadUiState.progress}%'),
+                Text('Loading......${blogUploadUiState.progress}%'),
                 LinearProgressIndicator(
                   value: blogUploadUiState.progress,
                 )
@@ -46,24 +44,29 @@ class _BlogUploadScreenState extends State<BlogUploadScreen> {
           } else if (blogUploadUiState is BlogUploadSuccess) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: [
-                Center(child: Text(blogUploadUiState.blogUploadResponse.result ?? '')),
-                ElevatedButton(onPressed: () {
-                  Navigator.pop(context,'success');
-                  blogUploadNotifier.blogUploadUiState=BlogUploadFormState();
-                }, child: const Text('Ok'))
+                Center(
+                    child: Text(
+                        blogUploadUiState.blogUploadResponse.result ?? '')),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, 'success');
+                      blogUploadNotifier.blogUploadUiState =
+                          BlogUploadFormState();
+                    },
+                    child: const Text('Ok'))
               ],
             );
           } else if (blogUploadUiState is BlogUploadFailed) {
             return Column(
-
-             mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(blogUploadUiState.errorMessage),
-                ElevatedButton(onPressed: () {
-                 blogUploadNotifier.tryAgain();
-                }, child: const Text('Try again'))
+                ElevatedButton(
+                    onPressed: () {
+                      blogUploadNotifier.tryAgain();
+                    },
+                    child: const Text('Try again'))
               ],
             );
           }

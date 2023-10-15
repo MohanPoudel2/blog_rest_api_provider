@@ -3,11 +3,13 @@ import 'package:blog_rest_api_provider/data/service/blog_api_service.dart';
 import 'package:blog_rest_api_provider/provider/blog_post_delete/delete_post_provider.dart';
 import 'package:blog_rest_api_provider/provider/get_complete_post/get_complete_post_state.dart';
 import 'package:blog_rest_api_provider/provider/title_provider/title_state.dart';
+import 'package:blog_rest_api_provider/ui/screens/blog_put_screen.dart';
 import 'package:blog_rest_api_provider/ui/screens/home_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../provider/get_all_post/get_all_post_notifier.dart';
 import '../../provider/get_complete_post/get_complete_post_notifier.dart';
 import '../../provider/title_provider/get_title_notifier.dart';
 
@@ -26,7 +28,7 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
     super.didChangeDependencies();
     _getBlogDetail(widget.id);
     _getBlogTitle(widget.id);
-
+    _getAllPost(context);
   }
 
   @override
@@ -72,15 +74,24 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
                                       Navigator.pop(context);
                                     },
                                     child: const Text('cancel')),
-                               Consumer<DeletePostNotifier>(builder: (_, deletePostNotifier, __){
+                                Consumer<DeletePostNotifier>(
+                                  builder: (_, deletePostNotifier, __) {
+                                    return ElevatedButton(
+                                        onPressed: () {
+                                          _deleteBlogPost(widget.id);
+                                          _getAllPost(context);
+                                          _getBlogDetail(widget.id);
 
-                                  return ElevatedButton(onPressed: (){
-                                    _deleteBlogPost(widget.id);
-                                    _getBlogDetail(widget.id);
-
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>const  HomeScreen(),));
-                                  }, child: const Text('Ok'));
-                                 },)
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomeScreen(),
+                                              ));
+                                        },
+                                        child: const Text('Ok'));
+                                  },
+                                )
                               ],
                             )
                           ],
@@ -140,6 +151,20 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlogPutScreen(id: widget.id),
+              ));
+          if(result !=null && result =="success"){
+            _getBlogDetail(widget.id);
+            _getBlogTitle(widget.id);
+          }
+        },
+        child: const Icon(Icons.edit),
+      ),
     );
   }
 
@@ -152,7 +177,12 @@ class _BlogPostDetailScreenState extends State<BlogPostDetailScreen> {
     Provider.of<GetTitleNotifier>(context, listen: false).getTitle(id: id);
   }
 
+  void _getAllPost(BuildContext ctx) {
+    Provider.of<GetAllPostNotifier>(context, listen: false).getAllPost();
+  }
+
   void _deleteBlogPost(int id) {
-    Provider.of<DeletePostNotifier>(context,listen: false).deleteOnePost(id: widget.id);
+    Provider.of<DeletePostNotifier>(context, listen: false)
+        .deleteOnePost(id: widget.id);
   }
 }
